@@ -1,6 +1,6 @@
 ---
 title: 'STAT6020 : Assignment 10 - Statistical Analysis'
-author: "Anamul Haque"
+author: "John Doe"
 date: "3/28/2020"
 output: 
   html_document:
