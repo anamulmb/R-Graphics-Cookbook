@@ -1,7 +1,7 @@
 # Homework 5 : Function #
 print('Homework 5 : Function')
 
-# Anamul Haque
+# John Doe
 
 # Part 1 & 2 : Investigating the Reduce() function
 ################################################################
