@@ -1,0 +1,218 @@
+---
+title: 'STAT6020 : Assignment 9 - Statistical Analysis'
+author: "Anamul Haque"
+date: "3/7/2020"
+output: 
+  html_document:
+    toc: true
+    theme: united
+    highlight: tango
+---
+### Q1. One Proportion Z-test
+```{r}
+# x is the number of success, in this case total number of yes which is 369
+# n is sample size which is 369+483 = 852
+# p is the population proportion which is 0.5 for this problem
+# correct is set to FALSE because Yates continuity did not applied here
+# Also the confidence level = 1- 1/100 = 0.99
+# Null Hypothesis : True proportion is equal to 0.5
+# Alternate Hypothesis : True proportion is not equal to 0.5
+q1 <- prop.test(x=369, n=852, p=0.5, alternative = "two.sided", conf.level= 0.99, correct = FALSE)
+print(q1)
+```
+```{r}
+# For making the output beautiful we are using the EnvStat package
+library(EnvStats)
+q1a <- prop.test(x=369, n=852, p=0.5, alternative = "two.sided", conf.level= 0.99, correct = FALSE)
+print(q1a)
+```
+
+***There are sufficient evidence at the 1% significance level to suggest that the population proportion would answer yes is different from 0.5***
+
+
+### Q2. One Sample Mean T-test
+
+```{r}
+# Setting a dataframe wine dispensing observation
+wine_obs <- c(5.05,5.15,4.95,5.11)
+wine_obs
+# Null Hypothesis : True wine dispensing mean is equal to 5.1 ounce 
+# Alternate Hypothesis : True wine dispensing mean is less than 5.1 ounce
+q2 <- t.test(wine_obs, mu=5.1, alternative = "two.sided", conf.level = 0.95)
+print(q2)
+```
+***There are sufficient evidence at the significance level 0.05 to suggest that the population mean amount dispensed for a full glass is less than 5.1 ounces***
+
+### Q3. Two Population Mean T-test Assuming Population Variances are Equivalence
+
+```{r}
+# Reading the .txt file into dataframe
+df_gsh <- read.table("StudyHoursGSS.txt",header = TRUE)
+df_gsh
+```
+
+```{r}
+# Performing t-test with 98% confidence interval 
+q3 <- t.test(hours ~ Group, data=df_gsh, var.equal=TRUE, conf.level=0.98)
+print(q3)
+```
+
+
+***At 98% confidence interval the lower confidence level is -4.267173 and upper confidence level is 9.400506***
+
+
+### Q4. ANOVA and Tukey HSD
+```{r}
+# Building the data frame
+ProgramA <- c(7,9,5)
+ProgramB <- c(9,11,7)
+ProgramC <- c(15,12,18)
+df_wl <- data.frame(cbind(ProgramA,ProgramB,ProgramC))
+df_wl
+```
+***Here the hypothesis were set as :***
+
+
+***Null Hypothesis: Mean weight loss is same for the three programs*** 
+
+
+***Alternative Hypothesis: Mean Weight loss is not same for the three programs*** 
+
+
+
+```{r}
+# Showing the data distribution
+boxplot(df_wl, ylab="Weight_Lost", xlab="Program")
+```
+
+
+***The boxplot is showing that ProgramA and ProgramB weight loss intervals are spreading through each others while ProgramC did not overlap any other program***
+
+
+```{r}
+# Stacking the data into two column
+stacked_df_wl <- stack(df_wl)
+names(stacked_df_wl)<-c("Weight_Lost", "Program")
+stacked_df_wl
+```
+
+```{r}
+# Running ANOVA test
+anova_results <- aov(Weight_Lost~Program, data=stacked_df_wl)
+summary(anova_results)
+```
+
+
+***As the p-value is less than the significance level 0.05, we can conclude that there are significant differences between the groups highlighted with “*" in the model summary***
+
+```{r}
+# Checking the appropriate conditions
+par(mfrow=c(2,2)) # This changes the panel layout to 2 x 2
+plot(anova_results)
+par(mfrow=c(1,1)) # This change back to 1 x 1
+```
+
+
+***Residual vs Fitted plot showing that the weight loss observations seem to have fairly similar spreads at the fitted values for the three groups of 7, 19, and 15 and there is no non-linear relation***
+
+
+***Normal Q-Q plot showing that data points falling approximately along the diagonal reference line, therefore they are normally distributed*** 
+
+
+***The Scale-Location plot is showing that the points are randomly spread along the range of the predictors. This asserts the assumptions of equal variance right***
+
+
+***Constatnt Leverage plot is showing that there is no influencial cases becasue no point is outside of the Cook's Distance Score***
+
+
+```{r}
+# Running Tukey HSD for multiple comparison
+TukeyHSD(anova_results)
+
+```
+
+***The pairwise comaprison in the Tukey HSD showing that there are significant difference between ProgramC & ProgramA and ProgramC & ProgramB(Adjusted P<0.05).There is no significacnce difference between ProgramB & ProgramA (Adjusted P>0.05)***  
+
+```{r}
+# Plotting Tukey HSD multiple comparison
+plot(TukeyHSD(anova_results), las=1)
+
+```
+
+
+***Here only ProgramB-ProgramA crosses 0, therefore their difference is not significant***
+
+
+### Q5. Multiple Regression
+
+```{r}
+# Loading the Data into the environment
+data(state)
+# Converting state.x77 matrix into dataframe
+df_x77 <- as.data.frame(state.x77)
+head(df_x77)
+```
+
+```{r}
+# Changing the column names Life Exp and HS Grad to reomve space
+colnames(df_x77)[4] <- "Life.Exp"                   
+colnames(df_x77)[6] <- "HS.Grad"
+head(df_x77)
+```
+
+
+```{r}
+# Finding Correlation bentween each pair of varaibles
+cor(df_x77)
+```
+
+```{r}
+# Settling on a model that has HS.Grad and Murder as predictor (explanatory variables) and Life.Exp as the response (dependent) variable
+
+model <- Life.Exp ~ Murder + HS.Grad
+fit <- lm(formula = model, data= df_x77)
+summary(fit)
+```
+
+
+***P value is less than 0.05 and it indicates that the models is significant***
+
+```{r}
+# Plotting the linear models 
+plot(fit)
+```
+
+
+***Residual vs Fitted plot showing that not all the data points are spread homdestically and there are couple of outliers (Texas, Hawaii, Maine)***
+
+
+***Normal Q-Q plot showing that data points falling approximately along the diagonal reference line, therefore they are normally distributed. Texas, Nevada, and Maine showing some character of being outliers.*** 
+
+
+***The Scale-Location plot is showing that the points are randomly spread along the range of the predictors. There might be some outliers like Texas, Nevada, and Maine***
+
+
+***Constatnt Leverage plot is showing that there is no influencial cases becasue no point is outside of the Cook's Distance Score though Alaska, Nevada, and Hawaii is very close to that***
+
+
+```{r}
+# Obtaining the 95% confidence intervals for the coefficient of the two predictor variables
+confint(fit, level = 0.95)
+```
+
+```{r}
+# Predicting the Life Expectancy for a state where 55% of the population are High School graduates, and the murder rate is 8 per 100,000
+fit.new <- data.frame(Murder = 8, HS.Grad = 55)
+predict(fit, newdata=fit.new)
+```
+
+```{r}
+# Obtaining a 98% confidence interval for the above prediction
+predict(fit, newdata=fit.new, interval='confidence', level = 0.98)
+```
+
+```{r}
+# Obtain a 98% prediction interval for the above prediction
+predict(fit, newdata=fit.new, interval='prediction', level = 0.98)
+```
+

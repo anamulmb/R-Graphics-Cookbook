@@ -1,0 +1,92 @@
+---
+title: 'STAT6020 : Assignment 10 - Statistical Analysis'
+author: "Anamul Haque"
+date: "3/28/2020"
+output: 
+  html_document:
+    toc: true
+    theme: united
+    highlight: tango
+---
+
+### Question 1
+```{r}
+# Building the function for final amount F where, P = principle investment amount, i = interest rate per annum, t = frequency of interest paid per year, y = number of years
+
+comp <- function(P, i, t = 12, y, plotit = TRUE,...) {
+  # Storing the values per year
+  year <- 1:y
+  balance <- P * (1 + i / (100 * t)) ^ (t * year)
+  
+  if (plotit == T) {
+    plotgraph<-plot(year, balance, type = "s",...)
+  } else{
+    return(balance)
+  }
+}
+
+
+# Answer 1.i
+##############################################
+comp(5000,4.4,y=10,plotit=F)[10]
+```
+
+
+```{r}
+# Answer 1.ii
+##############################################
+comp(100,22.9,12,20,plotit=T,main="Compound interest calculator",ylab="Balance (F)",xlab="Year (y)")
+```
+
+```{r}
+# Answer 1.iii
+##############################################
+comp(100,22.9,12,20,plotit=T,main="Compound interest calculator",ylab="Balance (F)",xlab="Year (y)")
+ann_comp <- comp(100,22.9,1,20,plotit=F)
+lines(1:20,ann_comp,lty=2,type="s")
+legend("topleft",lty=c(1,2),legend=c("monthly interest","annual interest"))
+```
+
+
+### Question 2
+```{r}
+# I have used the if and else conditionals for building the function
+# I used ANY function to check whether all of the arguments are presents 
+# Inside ANY function, I have used another function MISSING. MISSING checks whether any argument in the function call is missing.  
+
+
+quad <-function(k1,k2,k3){
+  if(any(missing(k1),missing(k2),missing(k3))){
+    return("At least one of k1, k2, k3 was missing")
+  }
+  if(((k2^2)-(4*k1*k3))<0){
+    return("No real roots")
+  }
+  if(((k2^2)-(4*k1*k3))==0){
+    return(-k2/(2*k1))
+  }else{
+    x1<-(-k2-((k2^2)-(4*k1*k3))^0.5)/(2*k1)
+    x2<-(-k2+((k2^2)-(4*k1*k3))^0.5)/(2*k1)
+    return(cat(x1,x2))
+  }
+}
+
+# Answer 2.i
+##############################################
+quad(k1=2,k2=-1,k3=-5)
+quad(1,1,1)
+
+
+# Answer 2.ii
+##############################################
+quad(k1=1.3,k2=-8,k3=-3.13)
+quad(2.25,-3,1)
+quad(1.4,-2.2,-5.1)
+quad(-5,10.11,-9.9)
+
+
+# Answer 2.iii
+##############################################
+quad(0)
+
+```
