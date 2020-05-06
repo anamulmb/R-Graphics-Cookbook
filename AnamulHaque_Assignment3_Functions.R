@@ -1,5 +1,5 @@
 # Homework 3 : Function #
-# Anamul Haque
+# John Doe
 # Part 3 : Calculating Cumulative Sum
 ################################################################
 
