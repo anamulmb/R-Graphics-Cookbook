@@ -1,0 +1,86 @@
+---
+title: 'Assignment 8: Simulation and Probability Distribution'
+author: "Anamul Haque"
+date: "29/2/2020"
+output:
+  html_document:
+    theme : united
+    highlight: tango
+    toc: true
+    toc_float : true
+---
+
+## Q1. Finding the probability that a normal random variable with mean 22 and variance 25 lies between 16.2 and 27.5
+
+```{r}
+# Variance is 25, therefore sd = sqrt(25) = 5
+# Mean is 22
+# Probability that the normal variable will be less than 16.2
+# Probability of a random variable x in normal distribution pnorm(x, mean, sd)
+p1 = pnorm(16.2,22,5)
+# Probability that the normal variable will be less than 27.5
+p2 = pnorm(27.5,22,5)
+
+#  Probability that the normal random variable lies between 16.2 and 27.5
+pq1 = p2 - p1
+pq1
+```
+
+## Q2. Finding the probability that a normal random variable with mean 25 and and standard deviation 3 is greater than 27
+```{r}
+# Here mean is 25 and sd is 3 
+# Probability that the normal variable will be less than 27
+# Probability of a random variable x in normal distribution pnorm(x, mean, sd)
+q = pnorm(27,25,3)
+
+# Probability that the normal variable will be greter than 27
+pq2 = 1- q
+pq2
+```
+## Q3. Finding the probability that in 60 tosses of a fair coin (probability 0.5) the head comes up between 20 and 30 times. The coin toss is a binomial distribution 
+
+```{r}
+# Here the probability is 0.5 
+# Probability of an expected outocomr x in binomial distribution pbinom(expected_outcome, total_outcome, probability)
+# Probability of getting 30 heads from 60 toss 
+p30 = pbinom(30, 60, 0.5)
+# Probability of getting 30 heads from 60 toss 
+p20 = pbinom(20, 60, 0.5)
+
+# Probability of getting head between 20 and 30 times
+pq3 = p30 - p20
+pq3
+```
+
+## Q4. A random variable X has Poisson distribution with mean 7. Finding the probability that X is strictly greater than 10
+
+```{r}
+# Here the mean is 7
+# Probability of getting random vraible X is strictly less than 10 is
+q4 = ppois(10,7)
+
+# Probability of getting random vraible X is strictly greater than 10 is
+pq4 = 1-q4
+pq4
+```
+
+## Q5. Generating 500 samples from Student's t distribution with 5 degrees of freedom and plotting them in the histogram
+
+```{r}
+# To generate 500 samples in the students t distribution we have to use the formula rt(n, df, ncp). Here n is the number of observation, df is the degree of freedom and ncp is the non-centrality parameter. I am omiitting ncp here, since I am using the central t distribution.   
+td <- rt(500, 5)
+td
+# Plottting the distribution in the histogram
+hist(td,40)
+```
+
+## Q6. Plotting the probability mass function for the Poisson distribution with mean 4.5 and 12 respectively.  
+
+```{r}
+# Without no upper limit 
+x <- 0:25
+plot(x, dpois(x, lambda = 4.5), main = "Probability Mass Function for lambda 4.5")
+plot(x, dpois(x, lambda = 12), main = "Probability Mass Function for lambda 12")
+```
+
+
