@@ -1,6 +1,6 @@
 ---
 title: 'Assignment 8: Simulation and Probability Distribution'
-author: "Anamul Haque"
+author: "John Doe"
 date: "29/2/2020"
 output:
   html_document:
