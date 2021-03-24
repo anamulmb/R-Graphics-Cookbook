@@ -127,6 +127,7 @@ par(mfrow=c(1,1)) # This change back to 1 x 1
 
 ```{r}
 # Running Tukey HSD for multiple comparison
+## I know it is the second version
 TukeyHSD(anova_results)
 
 ```
